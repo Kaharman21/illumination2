@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "139888563907",
+    "project_id": "raion2",
+    "storage_bucket": "raion2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:139888563907:android:da12360df72d0c22c8f476",
+        "android_client_info": {
+          "package_name": "idnull.znz.illumination2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "139888563907-m8jb321v5qfdfk5ob7km5pi8ualgcj5l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "idnull.znz.illumination2",
+            "certificate_hash": "3439803dbc12da22b255a3c8d960633e2ca7fd75"
+          }
+        },
+        {
+          "client_id": "139888563907-ovejcs9p68f283ben7apglk4r9rbm5bk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDWMdCbtlB5hnlUywefEskxESry0Eal5pE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "139888563907-ovejcs9p68f283ben7apglk4r9rbm5bk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

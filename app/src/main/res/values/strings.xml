@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Illumination</string>
+    <string name="hello">Hello</string>
+    <string name="message">message...</string>
+</resources>
