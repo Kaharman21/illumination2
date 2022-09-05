@@ -5,11 +5,7 @@ import com.google.firebase.database.DatabaseReference
 
 object FireBaseInit {
     lateinit var aunt: FirebaseAuth
-  //  lateinit var currentId:String
     lateinit var refDataBase: DatabaseReference
-
-
-
 }
 
 

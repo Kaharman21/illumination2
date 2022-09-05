@@ -7,16 +7,21 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import idnull.znz.illumination2.App
 import idnull.znz.illumination2.R
 import idnull.znz.illumination2.dagger.viewmodel.injectViewModel
 import idnull.znz.illumination2.presentation.chat.ChatFragment
-import idnull.znz.illumination2.presentation.login.LoginViewModel
-import idnull.znz.illumination2.utils.APP_ACTIVITY
-import idnull.znz.illumination2.utils.AppPreference
 import javax.inject.Inject
 
 class SplashFragment : Fragment(R.layout.splash_fragment) {
+
+    private lateinit var mAuth: FirebaseAuth
+    private var currentUser: FirebaseUser? = null
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -27,6 +32,8 @@ class SplashFragment : Fragment(R.layout.splash_fragment) {
         super.onCreate(savedInstanceState)
 
         viewModel = injectViewModel(factory = viewModelFactory)
+        mAuth = Firebase.auth
+        currentUser = mAuth.currentUser
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -35,17 +42,26 @@ class SplashFragment : Fragment(R.layout.splash_fragment) {
     }
 
     private fun checkUserAuth() {
-        if (AppPreference.getInitUser()) {
+//        if (currentUser != null) {
+//            goToChat()
+//        } else {
+//            goToLogin()
+//        }
+
+        Log.d("TAGTAG", "currentUser = $currentUser")
+        currentUser?.let {
             goToChat()
-        } else {
+       //     goToLogin()
+        } ?: run {
             goToLogin()
+        //    goToChat()
         }
     }
 
     private fun goToLogin() {
         Handler(Looper.getMainLooper()).postDelayed(
             Runnable {
-                APP_ACTIVITY.navController.navigate(
+                findNavController().navigate(
                     R.id.action_splashFragment_to_loginFragment
                 )
             },
@@ -54,10 +70,10 @@ class SplashFragment : Fragment(R.layout.splash_fragment) {
     }
 
     private fun goToChat() {
-        viewModel.initial()
+        viewModel.initDatabase()
 
         viewModel.allMessage.observe(viewLifecycleOwner){
-            APP_ACTIVITY.navController.navigate(
+            findNavController().navigate(
                 R.id.action_splashFragment_to_chatFragment,
                 ChatFragment.createArgs(it)
             )

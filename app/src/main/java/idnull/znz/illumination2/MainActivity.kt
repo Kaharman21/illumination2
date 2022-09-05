@@ -6,26 +6,21 @@ import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import idnull.znz.illumination2.utils.APP_ACTIVITY
 import idnull.znz.illumination2.utils.AppPreference
 import idnull.znz.illumination2.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var mToolbar: Toolbar
-    lateinit var navController: NavController
-    private var _binding: ActivityMainBinding? = null
-    val mBinding get() = _binding!!
 
+    lateinit var navController: NavController
+    private lateinit var mToolbar: Toolbar
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        //       App.appComponent.inject(this)
         super.onCreate(savedInstanceState)
         AppPreference.getPreference(this)
-        APP_ACTIVITY = this
-
-        _binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(mBinding.root)
-        mToolbar = mBinding.toolbar
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        mToolbar = binding.toolbar
         navController = Navigation.findNavController(this, R.id.nav_host_fragment)
 
         setSupportActionBar(mToolbar)
@@ -42,15 +37,5 @@ class MainActivity : AppCompatActivity() {
                 mToolbar.visibility = View.VISIBLE
             }
         }
-
-
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
-
-    }
-
-
 }

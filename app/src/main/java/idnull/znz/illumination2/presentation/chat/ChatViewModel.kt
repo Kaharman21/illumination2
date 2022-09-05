@@ -10,22 +10,15 @@ import javax.inject.Inject
 class ChatViewModel @Inject constructor(private val firebaseRepository: FirebaseRepository) : ViewModel() {
 
     val allMessage = firebaseRepository.allMessage
-    fun signOut(){
 
+    fun signOut(){
         firebaseRepository.signOut()
     }
 
-
-    fun insertMessage(text:String){
-
-
-
-
+    fun insertMessage(text:String, onSuccess: (() -> Unit)? = null, onFailure: (() -> Unit)? = null){
         viewModelScope.launch {
-            firebaseRepository.insertMessage(text,){}
+            firebaseRepository.insertMessage(text, onSuccess, onFailure)
         }
-
-
     }
 
 }
