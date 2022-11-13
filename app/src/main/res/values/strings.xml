@@ -2,4 +2,9 @@
     <string name="app_name">Illumination</string>
     <string name="hello">Hello</string>
     <string name="message">message...</string>
+    <string name="enter_email">Введите Email</string>
+    <string name="enter_password">Введите Password</string>
+    <string name="enter">Войти</string>
+    <string name="privacy_policy">Я подтверждаю, что мною прочтена и принята политика конфиденциальности</string>
+    <string name="privacy_policy_short">политика конфиденциальности</string>
 </resources>

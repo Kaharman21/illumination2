@@ -15,13 +15,11 @@ import com.google.firebase.ktx.Firebase
 import idnull.znz.illumination2.App
 import idnull.znz.illumination2.R
 import idnull.znz.illumination2.dagger.viewmodel.injectViewModel
+import idnull.znz.illumination2.domain.FireBaseInit
 import idnull.znz.illumination2.presentation.chat.ChatFragment
 import javax.inject.Inject
 
 class SplashFragment : Fragment(R.layout.splash_fragment) {
-
-    private lateinit var mAuth: FirebaseAuth
-    private var currentUser: FirebaseUser? = null
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -32,29 +30,34 @@ class SplashFragment : Fragment(R.layout.splash_fragment) {
         super.onCreate(savedInstanceState)
 
         viewModel = injectViewModel(factory = viewModelFactory)
-        mAuth = Firebase.auth
-        currentUser = mAuth.currentUser
+
+        FireBaseInit.aunt = Firebase.auth
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         checkUserAuth()
+        setupObservers()
+    }
+
+    private fun setupObservers() {
+        viewModel.apply {
+            dataFromDB.observe(viewLifecycleOwner) {
+                findNavController().navigate(
+                    R.id.action_splashFragment_to_chatFragment,
+                    ChatFragment.createArgs(it)
+                )
+            }
+        }
     }
 
     private fun checkUserAuth() {
-//        if (currentUser != null) {
-//            goToChat()
-//        } else {
-//            goToLogin()
-//        }
-
-        Log.d("TAGTAG", "currentUser = $currentUser")
-        currentUser?.let {
+        FireBaseInit.currentUser?.let {
+            FireBaseInit.currentUser = Firebase.auth.currentUser
             goToChat()
-       //     goToLogin()
         } ?: run {
             goToLogin()
-        //    goToChat()
         }
     }
 
@@ -70,13 +73,9 @@ class SplashFragment : Fragment(R.layout.splash_fragment) {
     }
 
     private fun goToChat() {
-        viewModel.initDatabase()
-
-        viewModel.allMessage.observe(viewLifecycleOwner){
-            findNavController().navigate(
-                R.id.action_splashFragment_to_chatFragment,
-                ChatFragment.createArgs(it)
-            )
+        viewModel.apply {
+            initDatabase()
+            loadData()
         }
     }
 }

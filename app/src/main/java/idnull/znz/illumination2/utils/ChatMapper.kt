@@ -14,7 +14,7 @@ class ChatMapper {
       //  if (chatMassage.name == FireBaseInit.aunt.)
 
         return when (chatMassage.name) {
-            FireBaseInit.aunt.currentUser?.email.toString() -> ChatMeMassage(name = chatMassage.name, text = chatMassage.text.toString())
+            FireBaseInit.aunt?.currentUser?.email.toString() -> ChatMeMassage(name = chatMassage.name, text = chatMassage.text.toString())
             else -> ChatOtherMassage(name = chatMassage.name.toString(), text = chatMassage.text.toString())
         }
 

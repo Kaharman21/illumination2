@@ -33,18 +33,10 @@ class ChatFragment : Fragment(R.layout.chat_fragment) {
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ChatViewModel
 
-    private lateinit var googleSignInClient: GoogleSignInClient
-
     override fun onCreate(savedInstanceState: Bundle?) {
         (activity?.application as? App)?.appComponent?.inject(this)
         viewModel = injectViewModel(factory = viewModelFactory)
         super.onCreate(savedInstanceState)
-
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("139888563907-ovejcs9p68f283ben7apglk4r9rbm5bk.apps.googleusercontent.com")
-            .requestEmail()
-            .build()
-        googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -52,26 +44,47 @@ class ChatFragment : Fragment(R.layout.chat_fragment) {
         binding = ChatFragmentBinding.bind(view)
         mAdapter = RecyclerViewAllMessage()
 
-        recyclerView = binding.messagesRecycler
-        recyclerView.adapter = mAdapter
-
-        binding.progressBar.isVisible = true
+        setupUi()
+        setupObservers()
+        setupListeners()
 
         args?.allMessages?.let {
             mAdapter.setData(it.map { ChatMapper().map(chatMassage = it) })
             binding.progressBar.isVisible = false
         }
-        viewModel.allMessage.observe(viewLifecycleOwner) { messageList ->
-            mAdapter.setData(messageList.map { ChatMapper().map(chatMassage = it) })
-            binding.progressBar.isVisible = false
-        }
+
+        viewModel.listenDataFromDB()
     }
 
     override fun onStart() {
         super.onStart()
 
         setHasOptionsMenu(true)
+    }
 
+    override fun onResume() {
+        super.onResume()
+        recyclerView.smoothScrollToPosition(mAdapter.itemCount)
+
+    }
+
+    private fun setupObservers() {
+        viewModel.apply {
+            dataFromDB.observe(viewLifecycleOwner) { messageList ->
+                mAdapter.setData(messageList.map { ChatMapper().map(chatMassage = it) })
+                binding.progressBar.isVisible = false
+            }
+        }
+    }
+
+    private fun setupUi() {
+        recyclerView = binding.messagesRecycler
+        recyclerView.adapter = mAdapter
+
+        binding.progressBar.isVisible = true
+    }
+
+    private fun setupListeners() {
         binding.send.setOnClickListener {
             val text = binding.input.text.toString()
             if (text.isEmpty()) {
@@ -84,12 +97,6 @@ class ChatFragment : Fragment(R.layout.chat_fragment) {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        recyclerView.smoothScrollToPosition(mAdapter.itemCount)
-
-    }
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu, menu)
     }
@@ -98,7 +105,6 @@ class ChatFragment : Fragment(R.layout.chat_fragment) {
         when (item.itemId) {
             R.id.btn_exit -> {
                 viewModel.signOut()
-                googleSignInClient.signOut()
                 findNavController().navigate(R.id.action_chatFragment_to_loginFragment)
             }
         }
