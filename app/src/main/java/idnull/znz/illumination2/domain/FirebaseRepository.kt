@@ -3,76 +3,94 @@ package idnull.znz.illumination2.domain
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import idnull.znz.illumination2.data.ChatMassage
-import idnull.znz.illumination2.utils.*
 import javax.inject.Inject
 
-class FirebaseRepository @Inject constructor(
-    private val signWithEmailAndPasswordUseCase: SignWithEmailAndPasswordUseCase
-){
+class FirebaseRepository @Inject constructor() {
 
-    init {
-        FireBaseInit.aunt = FirebaseAuth.getInstance()
-    }
-
-    val allMessage: LiveData<List<ChatMassage>> = AllMessageLiveData()
-
-    fun connectToDatabase(
+    fun signInWithEmailAndPassword(
         email: String,
         password: String,
         onSuccess: () -> Unit,
         onFail: (String) -> Unit
     ) {
-        signWithEmailAndPasswordUseCase.invoke(email, password, onSuccess, onFail)
-
-
-//        FireBaseInit.aunt.signInWithEmailAndPassword(email, password)
-//            .addOnSuccessListener {
-//                Log.d("SALAM", "FirebaseRepository   signInWithEmailAndPassword    addOnSuccessListener")
-//                initFB()
-//                onSuccess()
-//            }
-//            .addOnFailureListener {
-//                Log.d("SALAM", "FirebaseRepository   signInWithEmailAndPassword    addOnFailureListener")
-//                FireBaseInit.aunt.createUserWithEmailAndPassword(email, password)
-//                    .addOnSuccessListener {
-//                        Log.d("SALAM", "FirebaseRepository   createUserWithEmailAndPassword    addOnSuccessListener")
-//                        initFB()
-//                        onSuccess()
-//                    }
-//                    .addOnFailureListener {
-//                        onFail(it.message.toString())
-//                        Log.d("SALAM", "FirebaseRepository   createUserWithEmailAndPassword    addOnFailureListener")
-//                    }
-//            }
+        FireBaseInit.aunt?.signInWithEmailAndPassword(email, password)
+            ?.addOnSuccessListener {
+                Log.d(
+                    "SALAM",
+                    "FirebaseRepository   signInWithEmailAndPassword    addOnSuccessListener"
+                )
+                initDatabase()
+                onSuccess()
+            }
+            ?.addOnFailureListener {
+                Log.d(
+                    "SALAM",
+                    "FirebaseRepository   signInWithEmailAndPassword    addOnFailureListener"
+                )
+                createUserWithEmailAndPassword(
+                    email = email,
+                    password = password,
+                    onSuccess = onSuccess,
+                    onFail = onFail
+                )
+            }
     }
 
+    private fun createUserWithEmailAndPassword(
+        email: String,
+        password: String,
+        onSuccess: () -> Unit,
+        onFail: (String) -> Unit
+    ) {
+        FireBaseInit.aunt?.createUserWithEmailAndPassword(email, password)
+            ?.addOnSuccessListener {
+                Log.d(
+                    "SALAM",
+                    "FirebaseRepository   createUserWithEmailAndPassword    addOnSuccessListener"
+                )
+                initDatabase()
+                onSuccess()
+            }
+            ?.addOnFailureListener {
+                onFail(it.message.toString())
+                Log.d(
+                    "SALAM",
+                    "FirebaseRepository   createUserWithEmailAndPassword    addOnFailureListener"
+                )
+            }
+    }
 
-
-     fun initFB() {
-         Log.d("SALAM", "FirebaseRepository   initFB()")
-         //  FireBaseInit.currentId = FireBaseInit.aunt.currentUser?.uid.toString()
+    fun initDatabase() {
         FireBaseInit.refDataBase =
             FirebaseDatabase.getInstance().reference
-                //.child(FireBaseInit.currentId)
     }
 
-
-    fun insertMessage(text: String, onSuccess: () -> Unit) {
-
-          FireBaseInit.refDataBase.push().setValue(ChatMassage
-              (name = FireBaseInit.aunt.currentUser?.email.toString(),text = text))
-              .addOnSuccessListener { onSuccess()  }
-              .addOnFailureListener { ShowToast(it.message.toString()) }
+    fun insertMessage(
+        text: String,
+        onSuccess: (() -> Unit)? = null,
+        onFailure: (() -> Unit)? = null
+    ) {
+        Log.d("SALAMSALAM", "REPOSITORY insert -> email = ${FireBaseInit.currentUser?.email.toString()}    |   text = $text")
+        FireBaseInit.refDataBase?.push()?.setValue(
+            ChatMassage(name = FireBaseInit.currentUser?.email.toString(), text = text)
+        )
+            ?.addOnSuccessListener {
+                if (onSuccess != null) {
+                    onSuccess()
+                }
+            }
+            ?.addOnFailureListener {
+                if (onFailure != null) {
+                    onFailure()
+                }
+            }
     }
 
     fun signOut() {
-        FireBaseInit.aunt.signOut()
-        AppPreference.setInitUser(false)
+        FirebaseAuth.getInstance().signOut()
     }
-
 }
 
 

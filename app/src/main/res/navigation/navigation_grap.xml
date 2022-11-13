@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_graph"
     app:startDestination="@id/splashFragment">
+
     <fragment
         android:id="@+id/splashFragment"
         android:name="idnull.znz.illumination2.presentation.splash.SplashFragment"
@@ -16,6 +17,7 @@
             android:id="@+id/action_splashFragment_to_chatFragment"
             app:destination="@id/chatFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/loginFragment"
         android:name="idnull.znz.illumination2.presentation.login.LoginFragment"
@@ -27,6 +29,7 @@
             app:launchSingleTop="true"
             app:popUpTo="@id/navigation_graph" />
     </fragment>
+
     <fragment
         android:id="@+id/chatFragment"
         android:name="idnull.znz.illumination2.presentation.chat.ChatFragment"
@@ -38,5 +41,11 @@
             app:launchSingleTop="true"
             app:popUpTo="@id/navigation_graph" />
     </fragment>
+
+    <fragment
+        android:id="@+id/clanFragment"
+        android:name="idnull.znz.illumination2.presentation.clan.ClanFragment"
+        android:label="ClanFragment"
+        tools:layout="@layout/clan_fragment"/>
 
 </navigation>
