@@ -3,13 +3,10 @@ package idnull.znz.illumination2.presentation.splash
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import idnull.znz.illumination2.App
@@ -32,6 +29,7 @@ class SplashFragment : Fragment(R.layout.splash_fragment) {
         viewModel = injectViewModel(factory = viewModelFactory)
 
         FireBaseInit.aunt = Firebase.auth
+        FireBaseInit.currentUser = Firebase.auth.currentUser
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -54,7 +52,6 @@ class SplashFragment : Fragment(R.layout.splash_fragment) {
 
     private fun checkUserAuth() {
         FireBaseInit.currentUser?.let {
-            FireBaseInit.currentUser = Firebase.auth.currentUser
             goToChat()
         } ?: run {
             goToLogin()
