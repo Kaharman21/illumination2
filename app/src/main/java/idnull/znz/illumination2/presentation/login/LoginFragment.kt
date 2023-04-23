@@ -6,7 +6,6 @@ import android.content.DialogInterface.OnClickListener
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -21,9 +20,7 @@ import idnull.znz.illumination2.R
 import idnull.znz.illumination2.dagger.viewmodel.injectViewModel
 import idnull.znz.illumination2.databinding.LoginFragmentBinding
 import idnull.znz.illumination2.domain.FireBaseInit
-import idnull.znz.illumination2.presentation.chat.ChatFragment
 import idnull.znz.illumination2.utils.makeLinks
-import idnull.znz.illumination2.utils.showToast
 import javax.inject.Inject
 
 class LoginFragment : Fragment(R.layout.login_fragment) {
